@@ -34,7 +34,7 @@ export default function ContactDetailPanel({ contact, isOpen, onClose }: Contact
     <>
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 bg-black/20 backdrop-blur-sm transition-opacity duration-300 ease-in-out z-40 ${
+        className={`fixed inset-0 bg-black/30 backdrop-blur-md transition-all duration-500 ease-out z-40 ${
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
         onClick={onClose}
@@ -42,31 +42,35 @@ export default function ContactDetailPanel({ contact, isOpen, onClose }: Contact
 
       {/* Side Panel */}
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-[480px] bg-white dark:bg-gray-950 shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed top-0 right-0 h-full w-full sm:w-[520px] bg-white dark:bg-gray-950 shadow-2xl transform transition-all duration-500 ease-out z-50 border-l border-gray-200 dark:border-gray-800 ${
+          isOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          <div className="flex items-center justify-between px-8 py-6 border-b border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
               Contact Details
             </h2>
             <div className="flex items-center gap-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-9 w-9">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-10 w-10 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-all duration-300 hover:scale-110 active:scale-95"
+                  >
                     <MoreVertical className="h-5 w-5" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem className="gap-2">
-                    <Edit className="h-4 w-4" />
-                    Edit Contact
+                <DropdownMenuContent align="end" className="w-48 shadow-xl">
+                  <DropdownMenuItem className="gap-2 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors duration-200">
+                    <Edit className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                    <span className="font-medium">Edit Contact</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2 text-red-600 focus:text-red-600">
+                  <DropdownMenuItem className="gap-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 focus:bg-red-50 dark:focus:bg-red-950/30 focus:text-red-600 dark:focus:text-red-400 cursor-pointer transition-colors duration-200">
                     <Trash2 className="h-4 w-4" />
-                    Delete
+                    <span className="font-medium">Delete</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -74,7 +78,7 @@ export default function ContactDetailPanel({ contact, isOpen, onClose }: Contact
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="h-9 w-9"
+                className="h-10 w-10 rounded-full hover:bg-red-50 dark:hover:bg-red-950/30 hover:text-red-600 dark:hover:text-red-400 transition-all duration-300 hover:scale-110 active:scale-95 hover:rotate-90"
               >
                 <X className="h-5 w-5" />
               </Button>
@@ -82,26 +86,29 @@ export default function ContactDetailPanel({ contact, isOpen, onClose }: Contact
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700 scrollbar-track-transparent">
             {/* Profile Section */}
-            <div className="px-6 py-8 border-b border-gray-200 dark:border-gray-800">
+            <div className="px-8 py-10 border-b border-gray-200 dark:border-gray-800 bg-linear-to-b from-gray-50/50 to-transparent dark:from-gray-900/50">
               <div className="flex flex-col items-center text-center">
-                <Avatar className="h-24 w-24 border-2 border-gray-200 dark:border-gray-700">
-                  <AvatarImage src={contact.avatar} alt={contact.name} />
-                  <AvatarFallback className="bg-linear-to-br from-blue-500 to-purple-600 text-white text-2xl font-semibold">
-                    {contact.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <h3 className="mt-4 text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                <div className="relative group">
+                  <Avatar className="h-28 w-28 border-4 border-white dark:border-gray-900 shadow-xl ring-2 ring-gray-200 dark:ring-gray-800 transition-all duration-500 group-hover:scale-105 group-hover:shadow-2xl">
+                    <AvatarImage src={contact.avatar} alt={contact.name} />
+                    <AvatarFallback className="bg-linear-to-br from-blue-500 to-purple-600 text-white text-3xl font-bold">
+                      {contact.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full bg-emerald-500 dark:bg-emerald-400 border-4 border-white dark:border-gray-950 shadow-lg animate-pulse" />
+                </div>
+                <h3 className="mt-6 text-2xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
                   {contact.name}
                 </h3>
                 {contact.role && (
-                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 font-medium">
                     {contact.role}
                   </p>
                 )}
                 {contact.status && (
-                  <Badge className={`mt-3 ${getStatusColor(contact.status)} border font-normal`}>
+                  <Badge className={`mt-4 ${getStatusColor(contact.status)} border font-medium px-3 py-1 transition-all duration-300 hover:scale-105`}>
                     {contact.status}
                   </Badge>
                 )}
@@ -109,24 +116,25 @@ export default function ContactDetailPanel({ contact, isOpen, onClose }: Contact
             </div>
 
             {/* Contact Information */}
-            <div className="px-6 py-6 space-y-6">
+            <div className="px-8 py-6 space-y-6">
               <div>
-                <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
+                <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-5 flex items-center gap-2">
+                  <div className="h-1 w-8 bg-linear-to-r from-blue-500 to-transparent rounded-full" />
                   Contact Information
                 </h4>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {/* Email */}
-                  <div className="flex items-start gap-3 group">
+                  <div className="flex items-start gap-3 group cursor-pointer p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-all duration-300 hover:shadow-sm">
                     <div className="shrink-0 mt-0.5">
-                      <div className="h-9 w-9 rounded-lg bg-blue-50 dark:bg-blue-950/30 flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-950/50 transition-colors">
+                      <div className="h-10 w-10 rounded-xl bg-linear-to-br from-blue-50 to-blue-100/50 dark:from-blue-950/30 dark:to-blue-900/20 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-sm">
                         <Mail className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                       </div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Email</p>
+                      <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Email</p>
                       <a
                         href={`mailto:${contact.email}`}
-                        className="text-sm text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors break-all"
+                        className="text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 break-all group-hover:underline underline-offset-2"
                       >
                         {contact.email}
                       </a>
@@ -134,17 +142,17 @@ export default function ContactDetailPanel({ contact, isOpen, onClose }: Contact
                   </div>
 
                   {/* Phone */}
-                  <div className="flex items-start gap-3 group">
+                  <div className="flex items-start gap-3 group cursor-pointer p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-all duration-300 hover:shadow-sm">
                     <div className="shrink-0 mt-0.5">
-                      <div className="h-9 w-9 rounded-lg bg-green-50 dark:bg-green-950/30 flex items-center justify-center group-hover:bg-green-100 dark:group-hover:bg-green-950/50 transition-colors">
+                      <div className="h-10 w-10 rounded-xl bg-linear-to-br from-green-50 to-green-100/50 dark:from-green-950/30 dark:to-green-900/20 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-sm">
                         <Phone className="h-4 w-4 text-green-600 dark:text-green-400" />
                       </div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Phone</p>
+                      <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Phone</p>
                       <a
                         href={`tel:${contact.phone}`}
-                        className="text-sm text-gray-900 dark:text-gray-100 hover:text-green-600 dark:hover:text-green-400 transition-colors"
+                        className="text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-green-600 dark:hover:text-green-400 transition-all duration-200 group-hover:underline underline-offset-2"
                       >
                         {contact.phone}
                       </a>
@@ -153,19 +161,19 @@ export default function ContactDetailPanel({ contact, isOpen, onClose }: Contact
 
                   {/* Website */}
                   {contact.website && (
-                    <div className="flex items-start gap-3 group">
+                    <div className="flex items-start gap-3 group cursor-pointer p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-all duration-300 hover:shadow-sm">
                       <div className="shrink-0 mt-0.5">
-                        <div className="h-9 w-9 rounded-lg bg-purple-50 dark:bg-purple-950/30 flex items-center justify-center group-hover:bg-purple-100 dark:group-hover:bg-purple-950/50 transition-colors">
+                        <div className="h-10 w-10 rounded-xl bg-linear-to-br from-purple-50 to-purple-100/50 dark:from-purple-950/30 dark:to-purple-900/20 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-sm">
                           <Globe className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                         </div>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Website</p>
+                        <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Website</p>
                         <a
                           href={`https://${contact.website}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm text-gray-900 dark:text-gray-100 hover:text-purple-600 dark:hover:text-purple-400 transition-colors break-all"
+                          className="text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200 break-all group-hover:underline underline-offset-2"
                         >
                           {contact.website}
                         </a>
@@ -178,20 +186,21 @@ export default function ContactDetailPanel({ contact, isOpen, onClose }: Contact
               {/* Organization */}
               {(contact.company || contact.role) && (
                 <div>
-                  <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
+                  <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-5 flex items-center gap-2">
+                    <div className="h-1 w-8 bg-linear-to-r from-purple-500 to-transparent rounded-full" />
                     Organization
                   </h4>
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {contact.company && (
-                      <div className="flex items-start gap-3 group">
+                      <div className="flex items-start gap-3 group cursor-pointer p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-all duration-300 hover:shadow-sm">
                         <div className="shrink-0 mt-0.5">
-                          <div className="h-9 w-9 rounded-lg bg-gray-50 dark:bg-gray-900 flex items-center justify-center group-hover:bg-gray-100 dark:group-hover:bg-gray-800 transition-colors">
+                          <div className="h-10 w-10 rounded-xl bg-linear-to-br from-gray-50 to-gray-100/50 dark:from-gray-900 dark:to-gray-800/50 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-sm">
                             <Building2 className="h-4 w-4 text-gray-600 dark:text-gray-400" />
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Company</p>
-                          <p className="text-sm text-gray-900 dark:text-gray-100">
+                          <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Company</p>
+                          <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                             {contact.company}
                           </p>
                         </div>
@@ -199,7 +208,7 @@ export default function ContactDetailPanel({ contact, isOpen, onClose }: Contact
                     )}
 
                     {contact.role && (
-                      <div className="flex items-start gap-3 group">
+                      <div className="flex items-start gap-3 group cursor-pointer p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-all duration-300 hover:shadow-sm">
                         <div className="shrink-0 mt-0.5">
                           <div className="h-9 w-9 rounded-lg bg-gray-50 dark:bg-gray-900 flex items-center justify-center group-hover:bg-gray-100 dark:group-hover:bg-gray-800 transition-colors">
                             <Briefcase className="h-4 w-4 text-gray-600 dark:text-gray-400" />

@@ -4,6 +4,7 @@ import { Contact } from '@/types/contact';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,10 +44,10 @@ export default function ContactList({ contacts, loading, onContactClick }: Conta
   };
   if (loading) {
     return (
-      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden shadow-sm">
+      <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden shadow-lg dark:shadow-2xl">
         <div className="space-y-0">
           {[...Array(8)].map((_, i) => (
-            <div key={i} className="animate-pulse bg-gray-50 dark:bg-gray-900 h-16 border-b border-gray-100 dark:border-gray-800"></div>
+            <div key={i} className="animate-pulse bg-gray-50 dark:bg-gray-900 h-16 border-b border-gray-100 dark:border-gray-800 last:border-0"></div>
           ))}
         </div>
       </div>
@@ -55,7 +56,7 @@ export default function ContactList({ contacts, loading, onContactClick }: Conta
 
   if (contacts.length === 0) {
     return (
-      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-16 text-center">
+      <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-16 text-center shadow-lg dark:shadow-2xl">
         <div className="mx-auto max-w-sm">
           <svg
             className="mx-auto h-16 w-16 text-gray-300 dark:text-gray-600"
@@ -80,16 +81,16 @@ export default function ContactList({ contacts, loading, onContactClick }: Conta
   }
 
   return (
-    <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden shadow-sm">
+    <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden shadow-lg dark:shadow-2xl transition-shadow duration-300 hover:shadow-xl dark:hover:shadow-3xl">
       <Table>
         <TableHeader>
-          <TableRow className="bg-gray-50/50 dark:bg-gray-900/50 hover:bg-gray-50/50 dark:hover:bg-gray-900/50 border-b border-gray-200 dark:border-gray-800">
-            <TableHead className="w-12 py-3">
-              <input
-                type="checkbox"
+          <TableRow className="border-b border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50 hover:bg-gray-50/50 dark:hover:bg-gray-900/50">
+            <TableHead className="w-12 py-4">
+              <Checkbox
                 checked={selectedRows.size === contacts.length && contacts.length > 0}
-                onChange={toggleAllRows}
-                className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 focus:ring-2 transition-all cursor-pointer"
+                onCheckedChange={toggleAllRows}
+                aria-label="Select all"
+                className="border-gray-300 dark:border-gray-700"
               />
             </TableHead>
             <TableHead className="font-medium text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 py-3">
@@ -122,87 +123,90 @@ export default function ContactList({ contacts, loading, onContactClick }: Conta
               onMouseLeave={() => setHoveredRow(null)}
               className={`
                 group border-b border-gray-100 dark:border-gray-800 last:border-0
-                transition-all duration-200 ease-in-out
+                transition-all duration-300 ease-in-out
                 ${selectedRows.has(contact.id) 
-                  ? 'bg-blue-50/50 dark:bg-blue-950/20' 
-                  : 'hover:bg-gray-50/80 dark:hover:bg-gray-900/50'
+                  ? 'bg-blue-50/60 dark:bg-blue-950/30 shadow-sm' 
+                  : 'hover:bg-gray-50/90 dark:hover:bg-gray-900/60 hover:shadow-md'
                 }
-                cursor-pointer
+                cursor-pointer hover:scale-[1.01] active:scale-[0.99]
               `}
               onClick={() => onContactClick?.(contact)}
             >
-              <TableCell className="py-4">
-                <input
-                  type="checkbox"
+              <td className="py-4">
+                <Checkbox
                   checked={selectedRows.has(contact.id)}
-                  onChange={() => toggleRowSelection(contact.id)}
-                  onClick={(e) => e.stopPropagation()}
-                  className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 focus:ring-2 transition-all cursor-pointer"
+                  onCheckedChange={() => toggleRowSelection(contact.id)}
+                  onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                  aria-label={`Select ${contact.name}`}
+                  className="border-gray-300 dark:border-gray-700 data-[state=checked]:bg-blue-600 dark:data-[state=checked]:bg-blue-500 transition-all duration-200"
                 />
-              </TableCell>
-              <TableCell className="py-4">
+              </td>
+                            <td className="py-4">
                 <div className="flex items-center gap-3">
-                  <Avatar className="h-9 w-9 border border-gray-200 dark:border-gray-700">
-                    <AvatarImage src={contact.avatar} alt={contact.name} />
-                    <AvatarFallback className="bg-linear-to-br from-blue-500 to-purple-600 text-white text-xs font-semibold">
-                      {contact.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  <Avatar className="h-10 w-10 border-2 border-gray-200 dark:border-gray-700 shadow-sm transition-transform duration-200 group-hover:scale-110">
+                    <AvatarImage 
+                      src={contact.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(contact.name)}&background=random`}
+                      alt={contact.name}
+                    />
+                    <AvatarFallback className="bg-linear-to-br from-blue-500 to-purple-500 text-white font-semibold">
+                      {contact.name.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
-                    <span className="font-medium text-sm text-gray-900 dark:text-gray-100">
+                    <span className="font-semibold text-sm text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
                       {contact.name}
                     </span>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors duration-200">
                       {contact.email}
                     </span>
                   </div>
                 </div>
-              </TableCell>
-              <TableCell className="py-4">
-                <div className="text-sm text-gray-700 dark:text-gray-300">
+              </td>
+              <td className="py-4">
+                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {contact.company || '—'}
                 </div>
-              </TableCell>
-              <TableCell className="py-4">
+              </td>
+              <td className="py-4">
                 <div className="flex items-center gap-2">
-                  <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                  <div className="text-sm font-semibold text-gray-900 dark:text-gray-100 px-3 py-1.5 bg-linear-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 rounded-full border border-emerald-200 dark:border-emerald-800 shadow-sm transition-all duration-200 group-hover:shadow-md">
                     {contact.leadScore || Math.floor(Math.random() * 200)}
                   </div>
                 </div>
-              </TableCell>
-              <TableCell className="py-4">
-                <div className="text-sm text-gray-600 dark:text-gray-400">
+              </td>
+              <td className="py-4">
+                <div className="text-sm text-gray-600 dark:text-gray-400 font-mono">
                   {contact.phone}
                 </div>
-              </TableCell>
-              <TableCell className="py-4">
+              </td>
+              <td className="py-4">
                 <div className="flex flex-wrap gap-1.5">
                   {contact.tags?.slice(0, 3).map((tag, idx) => (
                     <Badge 
                       key={idx}
                       variant="secondary"
-                      className="px-2 py-0.5 text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 border-0 transition-colors"
+                      className="px-2.5 py-1 text-xs font-medium bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 text-blue-700 dark:text-blue-300 hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/40 dark:hover:to-indigo-900/40 border border-blue-200 dark:border-blue-800 transition-all duration-200 hover:scale-105"
                     >
                       {tag}
                     </Badge>
                   )) || (
                     <>
-                      <Badge variant="secondary" className="px-2 py-0.5 text-xs bg-blue-50 text-blue-700 hover:bg-blue-100 border-0">
+                      <Badge variant="secondary" className="px-2.5 py-1 text-xs font-medium bg-linear-to-r from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 text-blue-700 dark:text-blue-300 hover:from-blue-100 hover:to-cyan-100 border border-blue-200 dark:border-blue-800 transition-all duration-200 hover:scale-105">
                         test tag
                       </Badge>
-                      <Badge variant="secondary" className="px-2 py-0.5 text-xs bg-purple-50 text-purple-700 hover:bg-purple-100 border-0">
+                      <Badge variant="secondary" className="px-2.5 py-1 text-xs font-medium bg-linear-to-r from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 text-purple-700 dark:text-purple-300 hover:from-purple-100 hover:to-pink-100 border border-purple-200 dark:border-purple-800 transition-all duration-200 hover:scale-105">
                         another tag
                       </Badge>
                     </>
                   )}
                 </div>
-              </TableCell>
-              <TableCell className="py-4">
+              </td>
+              <td className="py-4">
                 <div className="text-sm text-gray-600 dark:text-gray-400">
                   {contact.createdDate || '22 Jul 2016'}
                 </div>
-              </TableCell>
-              <TableCell className="py-4">
+              </td>
+              <td className="py-4">
                 <div 
                   className={`
                     transition-opacity duration-200 ease-in-out
@@ -218,8 +222,8 @@ export default function ContactList({ contacts, loading, onContactClick }: Conta
                     <Edit className="h-3.5 w-3.5" />
                   </Button>
                 </div>
-              </TableCell>
-              <TableCell className="py-4">
+              </td>
+              <td className="py-4">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                     <Button 
@@ -245,7 +249,7 @@ export default function ContactList({ contacts, loading, onContactClick }: Conta
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </TableCell>
+              </td>
             </TableRow>
           ))}
         </TableBody>
